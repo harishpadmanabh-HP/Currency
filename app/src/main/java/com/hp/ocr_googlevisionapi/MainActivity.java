@@ -1,11 +1,8 @@
 package com.hp.ocr_googlevisionapi;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
@@ -13,6 +10,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -22,9 +23,6 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-/*
-https://github.com/prakashpun/TextRecognitionAndroid/tree/master/app/src/main/java/com/tuts/prakash/simpleocr
-    */
 
     SurfaceView mCameraView;
     TextView mTextView;
@@ -33,6 +31,8 @@ https://github.com/prakashpun/TextRecognitionAndroid/tree/master/app/src/main/ja
     private static final String TAG = "MainActivity";
     private static final int requestPermissionID = 101;
 
+
+    Boolean iscurrency=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,19 +128,6 @@ https://github.com/prakashpun/TextRecognitionAndroid/tree/master/app/src/main/ja
                 public void receiveDetections(Detector.Detections<TextBlock> detections) {
                     final SparseArray<TextBlock> items = detections.getDetectedItems();
                     if (items.size() != 0 ){
-                          for(int i=0;i<items.size();i++) {
-
-                              TextBlock item = items.valueAt(i);
-                              Log.e("ITEMS",items.valueAt(i).toString());
-                              if(item.getValue().equals("10"))
-                                    {
-                                        Toast.makeText(MainActivity.this, "Ten Rs Note Found", Toast.LENGTH_SHORT).show();
-                                    }
-                              break;
-                          }
-
-                        Toast.makeText(MainActivity.this, "Break", Toast.LENGTH_SHORT).show();
-
 
                         mTextView.post(new Runnable() {
                             @Override
@@ -150,10 +137,37 @@ https://github.com/prakashpun/TextRecognitionAndroid/tree/master/app/src/main/ja
                                     TextBlock item = items.valueAt(i);
                                     stringBuilder.append(item.getValue());
                                     stringBuilder.append("\n");
+
+                                    if(item.getValue().equals("RESERVE BANK OF INDIA"))
+                                    {
+                                        iscurrency=true;
+                                        Toast.makeText(MainActivity.this, "Currency found", Toast.LENGTH_SHORT).show();
+
+
+
+
+                                    }
                                     if(item.getValue().equals("10"))
                                     {
-                                        Toast.makeText(MainActivity.this, "Ten Rs Note Found", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "10 Rs note found", Toast.LENGTH_SHORT).show();
                                     }
+                                    else if(item.getValue().equals("20"))
+                                    {
+                                        Toast.makeText(MainActivity.this, "20 Rs note found", Toast.LENGTH_SHORT).show();
+                                    }else if(item.getValue().equals("50"))
+                                    {
+                                        Toast.makeText(MainActivity.this, "50 Rs note found", Toast.LENGTH_SHORT).show();
+                                    }if(item.getValue().equals("100"))
+                                    {
+                                        Toast.makeText(MainActivity.this, "100 Rs note found", Toast.LENGTH_SHORT).show();
+                                    }if(item.getValue().equals("2000"))
+                                    {
+                                        Toast.makeText(MainActivity.this, "2000 Rs note found", Toast.LENGTH_SHORT).show();
+                                    }
+
+
+
+
                                 }
                                 mTextView.setText(stringBuilder.toString());
                             }
