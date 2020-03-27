@@ -1,9 +1,13 @@
 package com.hp.ocr_googlevisionapi;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -27,12 +31,16 @@ public class MainActivity extends AppCompatActivity {
     SurfaceView mCameraView;
     TextView mTextView;
     CameraSource mCameraSource;
+    public static final String MyPREFERENCES = "MyPrefs";
+    SharedPreferences sharedPref;
+
 
     private static final String TAG = "MainActivity";
     private static final int requestPermissionID = 101;
 
 
-    Boolean iscurrency=false;
+    Boolean iscurrency = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         mCameraView = findViewById(R.id.surfaceView);
         mTextView = findViewById(R.id.text_view);
+        sharedPref = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         startCameraSource();
     }
@@ -127,49 +136,76 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void receiveDetections(Detector.Detections<TextBlock> detections) {
                     final SparseArray<TextBlock> items = detections.getDetectedItems();
-                    if (items.size() != 0 ){
+                    if (items.size() != 0) {
 
                         mTextView.post(new Runnable() {
                             @Override
                             public void run() {
                                 StringBuilder stringBuilder = new StringBuilder();
-                                for(int i=0;i<items.size();i++){
+                                for (int i = 0; i < items.size(); i++) {
                                     TextBlock item = items.valueAt(i);
                                     stringBuilder.append(item.getValue());
                                     stringBuilder.append("\n");
 
-                                    if(item.getValue().equals("RESERVE BANK OF INDIA"))
-                                    {
-                                        iscurrency=true;
+                                    if (item.getValue().equals("RESERVE BANK OF INDIA")) {
+                                        iscurrency = true;
                                         Toast.makeText(MainActivity.this, "Currency found", Toast.LENGTH_SHORT).show();
 
 
-
-
                                     }
-                                    if(item.getValue().equals("10"))
-                                    {
+                                    if (item.getValue().equals("10")) {
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("scan", "10");
+                                        editor.commit();
                                         Toast.makeText(MainActivity.this, "10 Rs note found", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else if(item.getValue().equals("20"))
-                                    {
+                                        finish();
+                                        startActivity(new Intent(getApplicationContext(), ScanResult.class));
+                                    } else if (item.getValue().equals("20")) {
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("scan", "20");
+                                        editor.commit();
                                         Toast.makeText(MainActivity.this, "20 Rs note found", Toast.LENGTH_SHORT).show();
-                                    }else if(item.getValue().equals("50"))
-                                    {
+                                        finish();
+                                        startActivity(new Intent(getApplicationContext(), ScanResult.class));
+
+                                    } else if (item.getValue().equals("50")) {
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("scan", "50");
+                                        editor.commit();
                                         Toast.makeText(MainActivity.this, "50 Rs note found", Toast.LENGTH_SHORT).show();
-                                    }if(item.getValue().equals("100"))
-                                    {
+                                        finish();
+                                        startActivity(new Intent(getApplicationContext(), ScanResult.class));
+
+                                    } else if (item.getValue().equals("100")) {
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("scan", "100");
+                                        editor.commit();
                                         Toast.makeText(MainActivity.this, "100 Rs note found", Toast.LENGTH_SHORT).show();
-                                    }if(item.getValue().equals("2000"))
-                                    {
+                                        finish();
+                                        startActivity(new Intent(getApplicationContext(), ScanResult.class));
+
+                                    } else if (item.getValue().equals("2000")) {
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("scan", "2000");
+                                        editor.commit();
                                         Toast.makeText(MainActivity.this, "2000 Rs note found", Toast.LENGTH_SHORT).show();
+
+                                        finish();
+                                        startActivity(new Intent(getApplicationContext(), ScanResult.class));
+
+                                    } else if (item.getValue().equals("500")) {
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("scan", "500");
+                                        editor.commit();
+                                        Toast.makeText(MainActivity.this, "2000 Rs note found", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                        startActivity(new Intent(getApplicationContext(), ScanResult.class));
+
                                     }
-
-
 
 
                                 }
-                                mTextView.setText(stringBuilder.toString());
+                                //  mTextView.setText(stringBuilder.toString());
                             }
                         });
                     }
