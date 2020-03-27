@@ -74,7 +74,7 @@ public class ScanResult extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        t1.speak("HAI", TextToSpeech.QUEUE_FLUSH, null);
+       // t1.speak("HAI", TextToSpeech.QUEUE_FLUSH, null);
 
     }
 
@@ -90,5 +90,10 @@ public class ScanResult extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finishAffinity();
+    }
+
+    public void cl(View view) {
+        t1.speak(restext.getText().toString(), TextToSpeech.QUEUE_FLUSH, null,null);
+
     }
 }
