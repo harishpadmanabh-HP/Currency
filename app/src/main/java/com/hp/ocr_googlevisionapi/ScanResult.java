@@ -2,6 +2,7 @@ package com.hp.ocr_googlevisionapi;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.speech.tts.TextToSpeech;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -25,6 +27,8 @@ public class ScanResult extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs";
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,24 +39,22 @@ public class ScanResult extends AppCompatActivity {
         String scan=sharedPref.getString("scan", null);
         Log.e("SCAN",scan);
         restext.setText(scan + " Rupees note Found");
-        t1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+        t1 = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
-                    int ttsLang = t1.setLanguage(Locale.US);
-
-                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
-                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.e("TTS", "The Language is not supported!");
-                    } else {
-                        Log.e("TTS", "Language Supported.");
+                    int result = t1.setLanguage(Locale.US);
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "This Language is not supported");
                     }
-                    Log.e("TTS", "Initialization success.");
+                    speak(restext.getText().toString());
+
                 } else {
-                    Toast.makeText(getApplicationContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
+                    Log.e("TTS", "Initilization Failed!");
                 }
             }
         });
+
         t1.speak(restext.getText().toString(), TextToSpeech.QUEUE_FLUSH, null,null);
 
 
@@ -95,5 +97,21 @@ public class ScanResult extends AppCompatActivity {
     public void cl(View view) {
         t1.speak(restext.getText().toString(), TextToSpeech.QUEUE_FLUSH, null,null);
 
+    }
+    private void speak(String text){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            t1.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+
+        }else{
+            t1.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+    @Override
+    public void onDestroy() {
+        if (t1 != null) {
+            t1.stop();
+            t1.shutdown();
+        }
+        super.onDestroy();
     }
 }

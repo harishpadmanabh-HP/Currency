@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
 
 
+
+
     private static final String TAG = "MainActivity";
     private static final int requestPermissionID = 101;
 
@@ -129,10 +131,15 @@ public class MainActivity extends AppCompatActivity {
                 public void release() {
                 }
 
+
                 /**
                  * Detect all the text from camera using TextBlock and the values into a stringBuilder
                  * which will then be set to the textView.
                  * */
+
+
+
+
                 @Override
                 public void receiveDetections(Detector.Detections<TextBlock> detections) {
                     final SparseArray<TextBlock> items = detections.getDetectedItems();
@@ -153,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                                     }
+
                                     if (item.getValue().equals("10")) {
                                         SharedPreferences.Editor editor = sharedPref.edit();
                                         editor.putString("scan", "10");
