@@ -7,9 +7,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
@@ -43,6 +46,34 @@ public class MainActivity extends AppCompatActivity {
 
     Boolean iscurrency = false;
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mainmenu, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.menu_logout: {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                prefs.edit().putInt("userid", 0).commit();
+                    startActivity(new Intent(getApplicationContext(),Splash.class));
+                return true;
+            }
+            case R.id.menu_history:
+                startActivity(new Intent(getApplicationContext(),History.class));
+                return true;
+//            case R.id.item3:
+//                Toast.makeText(getApplicationContext(),"Item 3 Selected",Toast.LENGTH_LONG).show();
+//                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,10 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-                /**
-                 * Detect all the text from camera using TextBlock and the values into a stringBuilder
-                 * which will then be set to the textView.
-                 * */
 
 
 
@@ -154,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                                     stringBuilder.append(item.getValue());
                                     stringBuilder.append("\n");
 
-                                    if (item.getValue().equals("RESERVE BANK OF INDIA")) {
+                                    if (item.getValue()==(getString(R.string.rbi))) {
                                         iscurrency = true;
                                         Toast.makeText(MainActivity.this, "Currency found", Toast.LENGTH_SHORT).show();
 
@@ -167,14 +194,15 @@ public class MainActivity extends AppCompatActivity {
                                         editor.commit();
                                         Toast.makeText(MainActivity.this, "10 Rs note found", Toast.LENGTH_SHORT).show();
                                         finish();
+
                                         startActivity(new Intent(getApplicationContext(), ScanResult.class));
                                     } else if (item.getValue().equals("20")) {
                                         SharedPreferences.Editor editor = sharedPref.edit();
                                         editor.putString("scan", "20");
                                         editor.commit();
                                         Toast.makeText(MainActivity.this, "20 Rs note found", Toast.LENGTH_SHORT).show();
-                                        finish();
                                         startActivity(new Intent(getApplicationContext(), ScanResult.class));
+                                        finish();
 
                                     } else if (item.getValue().equals("50")) {
                                         SharedPreferences.Editor editor = sharedPref.edit();
@@ -205,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                                         SharedPreferences.Editor editor = sharedPref.edit();
                                         editor.putString("scan", "500");
                                         editor.commit();
-                                        Toast.makeText(MainActivity.this, "2000 Rs note found", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "500 Rs note found", Toast.LENGTH_SHORT).show();
                                         finish();
                                         startActivity(new Intent(getApplicationContext(), ScanResult.class));
 

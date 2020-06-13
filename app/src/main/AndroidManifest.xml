@@ -3,6 +3,7 @@
     package="com.hp.ocr_googlevisionapi">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -13,20 +14,24 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/rupees"
-        android:roundIcon="@drawable/rupees"
-
         android:label="@string/app_name"
+        android:roundIcon="@drawable/rupees"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ScanResult"></activity>
-        <activity android:name=".FaceDEtection"></activity>
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".History"></activity>
+        <activity android:name=".LoginActivtity" />
+        <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SignUp" />
+        <activity android:name=".ScanResult" />
+        <activity android:name=".FaceDEtection" />
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
