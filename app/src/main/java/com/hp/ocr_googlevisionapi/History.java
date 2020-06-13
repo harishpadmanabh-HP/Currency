@@ -179,4 +179,9 @@ public class History extends AppCompatActivity {
         }
         super.onDestroy();
     }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
 }
