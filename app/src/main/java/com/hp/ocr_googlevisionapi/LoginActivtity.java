@@ -93,4 +93,9 @@ public class LoginActivtity extends AppCompatActivity {
     public void navigateSignUp(View view) {
         startActivity(new Intent(getApplicationContext(),SignUp.class));
     }
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
+
 }

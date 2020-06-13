@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hp.ocr_googlevisionapi.models.HistoryModel;
+import com.hp.ocr_googlevisionapi.models.SignUpModel;
 import com.hp.ocr_googlevisionapi.network.Retro;
 
 import java.util.Locale;
@@ -34,6 +35,9 @@ public class History extends AppCompatActivity {
     int sum = 0;
     private HistoryModel historyModel;
     TextToSpeech t1;
+    Adapter adapter;
+     int Userid;
+
 
 
     @Override
@@ -42,7 +46,6 @@ public class History extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         initView();
 
-        final int Userid;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(History.this);
         Userid= prefs.getInt("userid", 0);
         Log.e("USERID", String.valueOf(Userid));
@@ -55,10 +58,11 @@ public class History extends AppCompatActivity {
                      historyModel = response.body();
                     if(historyModel.getStatus().equalsIgnoreCase("success")){
                         historylist.setLayoutManager(new LinearLayoutManager(History.this,RecyclerView.VERTICAL,false));
-                        historylist.setAdapter(new Adapter(historyModel));
+                       adapter=new Adapter(historyModel);
+                        historylist.setAdapter(adapter);
                     }else
                     {
-                        Toast.makeText(History.this, "User not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(History.this, "Scan data not found", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -104,6 +108,49 @@ public class History extends AppCompatActivity {
                 {
                     Toast.makeText(History.this, "Cant load data", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                new Retro().getApi().deleteCall(String.valueOf(Userid)).enqueue(new Callback<SignUpModel>() {
+                    @Override
+                    public void onResponse(Call<SignUpModel> call, Response<SignUpModel> response) {
+                        if (response.body().getStatus().equalsIgnoreCase("success"))
+                        {
+                            Toast.makeText(History.this, "Scan history cleared", Toast.LENGTH_SHORT).show();
+                            t1 = new TextToSpeech(History.this, new TextToSpeech.OnInitListener() {
+                                @Override
+                                public void onInit(int status) {
+                                    if (status == TextToSpeech.SUCCESS) {
+                                        int result = t1.setLanguage(Locale.US);
+                                        if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                                            Log.e("TTS", "This Language is not supported");
+                                        }
+                                        speak("Your scan history has been cleared.");
+
+
+                                    } else {
+                                        Log.e("TTS", "Initilization Failed!");
+                                    }
+                                }
+                            });
+                        }else
+                        {
+                            Toast.makeText(History.this, "Try again later", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SignUpModel> call, Throwable t) {
+                        Toast.makeText(History.this, ""+t, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
             }
         });
 

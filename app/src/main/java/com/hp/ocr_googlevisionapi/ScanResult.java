@@ -121,7 +121,7 @@ Log.e("scan",scan);
             public void onResponse(Call<StoreMoneyModel> call, Response<StoreMoneyModel> response) {
                Log.e("Resposne",response.body().getStatus());
                 StoreMoneyModel storeMoneyModel =response.body();
-                if(storeMoneyModel.getStatus().equalsIgnoreCase("success")){
+                if(storeMoneyModel.getStatus().equalsIgnoreCase("Sucess")){
                     dialog.dismiss();
                     Toast.makeText(ScanResult.this, "Money Stored", Toast.LENGTH_SHORT).show();
 

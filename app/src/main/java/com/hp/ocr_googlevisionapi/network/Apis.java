@@ -25,4 +25,7 @@ public interface Apis {
     @GET("sum.php?")
     Call<HistoryModel> historyCall(@Query("id") String id);
 
+    @GET("delete_amount.php?")
+    Call<SignUpModel> deleteCall(@Query("id") String id);
+
 }
